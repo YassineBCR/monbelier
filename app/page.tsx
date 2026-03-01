@@ -1,96 +1,44 @@
-"use client"
+import { AppHeader } from "@/components/app-header";
+import { HeroSection } from "@/components/client/hero-section";
+import { BentoFeatures } from "@/components/client/bento-features";
+import { Button } from "@/components/ui/button";
 
-import { useState, useCallback } from "react"
-import { AppHeader } from "@/components/app-header"
-import { HeroSection } from "@/components/client/hero-section"
-import { LogisticsForm } from "@/components/client/logistics-form"
-import { PaymentSection } from "@/components/client/payment-section"
-import { AdminDashboard } from "@/components/admin/admin-dashboard"
-import { generateMockOrders } from "@/lib/mock-data"
-import type { DeliverySlot, Order, OrderStatus } from "@/lib/types"
-
-type ClientStep = "selection" | "logistics" | "payment"
-
-export default function Page() {
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [orders, setOrders] = useState<Order[]>(() => generateMockOrders(18))
-
-  // Client flow state
-  const [clientStep, setClientStep] = useState<ClientStep>("selection")
-  const [selectedSlot, setSelectedSlot] = useState<DeliverySlot | null>(null)
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    address: "",
-    city: "",
-    zipCode: "",
-    instructions: "",
-  })
-
-  const handleToggleMode = useCallback(() => {
-    setIsAdmin((prev) => !prev)
-  }, [])
-
-  const handleUpdateForm = useCallback((data: Partial<typeof formData>) => {
-    setFormData((prev) => ({ ...prev, ...data }))
-  }, [])
-
-  const handleOrderComplete = useCallback((order: Order) => {
-    setOrders((prev) => [order, ...prev])
-  }, [])
-
-  const handleUpdateStatus = useCallback((orderId: string, newStatus: OrderStatus) => {
-    setOrders((prev) =>
-      prev.map((o) =>
-        o.id === orderId
-          ? { ...o, status: newStatus, remaining: newStatus === "livre_solde" ? 0 : o.remaining }
-          : o
-      )
-    )
-  }, [])
-
+export default function Home() {
   return (
-    <div className="min-h-screen bg-background">
-      <AppHeader isAdmin={isAdmin} onToggle={handleToggleMode} />
+    <main className="min-h-screen bg-background selection:bg-primary/20">
+      <AppHeader />
+      
+      <HeroSection />
+      
+      <BentoFeatures />
 
-      {isAdmin ? (
-        <AdminDashboard orders={orders} onUpdateStatus={handleUpdateStatus} />
-      ) : (
-        <main>
-          {clientStep === "selection" && (
-            <HeroSection
-              selectedSlot={selectedSlot}
-              onSelectSlot={setSelectedSlot}
-              onContinue={() => {
-                if (selectedSlot) setClientStep("logistics")
-              }}
-            />
-          )}
-          {clientStep === "logistics" && (
-            <LogisticsForm
-              formData={formData}
-              onUpdateForm={handleUpdateForm}
-              onBack={() => setClientStep("selection")}
-              onContinue={() => setClientStep("payment")}
-            />
-          )}
-          {clientStep === "payment" && selectedSlot && (
-            <PaymentSection
-              selectedSlot={selectedSlot}
-              formData={formData}
-              onBack={() => setClientStep("logistics")}
-              onComplete={handleOrderComplete}
-            />
-          )}
-        </main>
-      )}
+      {/* Section CTA Finale */}
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-primary/5 -z-10" />
+        <div className="container mx-auto px-4 text-center">
+          <div className="glass-panel max-w-4xl mx-auto p-12 rounded-[3rem] border-white/20 bg-white/40 dark:bg-black/40">
+            <h2 className="text-4xl font-bold mb-6">Prêt à trouver la perle rare ?</h2>
+            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Rejoignez plus de 500 familles satisfaites qui ont choisi la qualité Mon Bélier pour leur Aïd.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="btn-premium px-10 h-14 text-lg">
+                Voir le Catalogue
+              </Button>
+              <Button variant="outline" size="lg" className="rounded-xl h-14 px-10 text-lg hover:bg-white/50">
+                Contacter un commercial
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <footer className="border-t border-border bg-card py-6 text-center">
-        <p className="text-xs text-muted-foreground">
-          MonBelier &copy; 2025 &mdash; Livraison de moutons pour l{"'"}Aid El Kebir
-        </p>
+      {/* Footer Minimaliste */}
+      <footer className="py-12 border-t border-white/10 mt-12">
+        <div className="container mx-auto px-4 text-center text-muted-foreground">
+          <p>© 2026 Mon Bélier. L'excellence de l'élevage.</p>
+        </div>
       </footer>
-    </div>
-  )
+    </main>
+  );
 }

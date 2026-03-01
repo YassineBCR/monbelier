@@ -1,151 +1,109 @@
-"use client"
+"use client";
 
-import Image from "next/image"
-import { Calendar, Clock, Package, CheckCircle2, ArrowRight, Euro } from "lucide-react"
-import { Progress } from "@/components/ui/progress"
-import type { DeliverySlot } from "@/lib/types"
+import { motion } from "framer-motion";
+import { ArrowRight, ShieldCheck, Star } from "lucide-react";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
-interface HeroSectionProps {
-  selectedSlot: DeliverySlot | null
-  onSelectSlot: (slot: DeliverySlot) => void
-  onContinue: () => void
-}
-
-const slots = [
-  {
-    id: "J+1" as DeliverySlot,
-    label: "Lendemain (J+1)",
-    subtitle: "Livraison demain matin",
-    remaining: 85,
-    total: 100,
-    icon: Clock,
-  },
-  {
-    id: "J+2" as DeliverySlot,
-    label: "Sur-lendemain (J+2)",
-    subtitle: "Livraison dans 2 jours",
-    remaining: 50,
-    total: 100,
-    icon: Calendar,
-  },
-]
-
-export function HeroSection({ selectedSlot, onSelectSlot, onContinue }: HeroSectionProps) {
+export function HeroSection() {
   return (
-    <div className="mx-auto max-w-lg px-4 py-8">
-      {/* Hero Banner */}
-      <div className="mb-8 text-center">
-        <div className="relative mx-auto mb-6 h-40 w-full overflow-hidden rounded-2xl sm:h-48">
-          <Image
-            src="/images/sheep-hero.jpg"
-            alt="Mouton dans un pr&eacute; verdoyant"
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent" />
-          <div className="absolute bottom-4 left-4 right-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary/90 px-4 py-1.5 backdrop-blur-sm">
-              <Package className="h-4 w-4 text-primary-foreground" />
-              <span className="text-sm font-medium text-primary-foreground">Aid El Kebir 2025</span>
+    <section className="relative w-full pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+      
+      {/* Background Effects (Aurora) */}
+      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse-slow pointer-events-none" />
+      <div className="absolute bottom-[10%] right-[-5%] w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
+
+      <div className="container px-4 md:px-6 mx-auto relative z-10">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+          
+          {/* Texte */}
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-col gap-6"
+          >
+            <div className="inline-flex w-fit items-center gap-2 px-3 py-1 rounded-full bg-white/50 dark:bg-white/10 border border-white/20 backdrop-blur-sm text-sm font-medium shadow-sm">
+              <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+              Commandes 2026 ouvertes
             </div>
-          </div>
-        </div>
-        <h2 className="font-[var(--font-heading)] text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-          <span className="text-balance">Votre mouton, livr&eacute; chez vous</span>
-        </h2>
-        <p className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground">
-          Choisissez votre cr&eacute;neau de livraison et r&eacute;glez un acompte pour r&eacute;server.
-        </p>
-      </div>
 
-      {/* Slot Cards */}
-      <div className="mb-6 flex flex-col gap-3">
-        {slots.map((slot) => {
-          const isSelected = selectedSlot === slot.id
-          const percentage = (slot.remaining / slot.total) * 100
-          const Icon = slot.icon
-          return (
-            <button
-              key={slot.id}
-              onClick={() => onSelectSlot(slot.id)}
-              className={`group relative flex items-start gap-4 rounded-xl border-2 p-5 text-left transition-all ${
-                isSelected
-                  ? "border-primary bg-primary/5 shadow-lg shadow-primary/10"
-                  : "border-border bg-card hover:border-primary/30 hover:shadow-md"
-              }`}
-            >
-              <div
-                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg transition-colors ${
-                  isSelected
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
-                }`}
-              >
-                <Icon className="h-6 w-6" />
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1]">
+              L'Élevage <br />
+              <span className="text-gradient">Réinventé.</span>
+            </h1>
+            
+            <p className="text-lg text-muted-foreground max-w-[600px] leading-relaxed">
+              Sélectionnez votre bélier d'exception parmi nos races Sardi & Timahdite. 
+              Traçabilité complète, santé garantie et livraison premium à domicile.
+            </p>
+
+            <div className="flex flex-wrap gap-4 pt-4">
+              <Button size="lg" className="btn-premium h-14 px-8 text-lg group">
+                Commander Maintenant
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+              <Button variant="outline" size="lg" className="h-14 px-8 text-lg rounded-xl border-2 hover:bg-secondary/50 backdrop-blur-sm">
+                Voir le catalogue
+              </Button>
+            </div>
+
+            <div className="flex items-center gap-6 pt-8 text-sm text-muted-foreground">
+              <div className="flex -space-x-3">
+                 {[1,2,3,4].map((i) => (
+                   <div key={i} className="w-10 h-10 rounded-full border-2 border-background bg-gray-200 overflow-hidden relative">
+                      <Image 
+                        src="/placeholder-user.jpg" 
+                        alt="Client" 
+                        fill 
+                        className="object-cover" 
+                      />
+                   </div>
+                 ))}
               </div>
-              <div className="flex-1">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="font-semibold text-foreground">{slot.label}</h3>
-                    <p className="mt-0.5 text-sm text-muted-foreground">{slot.subtitle}</p>
-                  </div>
-                  <div
-                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
-                      isSelected
-                        ? "border-primary bg-primary text-primary-foreground"
-                        : "border-muted-foreground/30"
-                    }`}
-                  >
-                    {isSelected && <CheckCircle2 className="h-4 w-4" />}
-                  </div>
+              <div>
+                <div className="flex items-center text-yellow-500 gap-1">
+                  <Star size={16} fill="currentColor" />
+                  <Star size={16} fill="currentColor" />
+                  <Star size={16} fill="currentColor" />
+                  <Star size={16} fill="currentColor" />
+                  <Star size={16} fill="currentColor" />
                 </div>
-                <div className="mt-3">
-                  <div className="mb-1.5 flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">Places restantes</span>
-                    <span className="font-semibold text-foreground">
-                      {slot.remaining}/{slot.total}
-                    </span>
-                  </div>
-                  <Progress value={percentage} className="h-2" />
+                <p className="font-medium text-foreground">4.9/5 par nos clients</p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Visuel 3D / Image Glass */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="relative lg:h-[600px] w-full flex items-center justify-center"
+          >
+            <div className="relative w-full max-w-[500px] aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-white/20 shadow-2xl animate-float">
+               <Image
+                src="/images/sheep-hero.jpg" 
+                alt="Bélier Sardi"
+                fill
+                className="object-cover"
+                priority
+              />
+              {/* Carte Flottante */}
+              <div className="absolute bottom-6 left-6 right-6 glass-panel p-4 rounded-2xl flex items-center gap-4 bg-white/80 dark:bg-black/60">
+                <div className="bg-primary/20 p-3 rounded-xl text-primary">
+                  <ShieldCheck size={24} />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Certificat Sanitaire</p>
+                  <p className="font-bold text-foreground">Garantie Vétérinaire 100%</p>
                 </div>
               </div>
-            </button>
-          )
-        })}
-      </div>
+            </div>
+          </motion.div>
 
-      {/* Pricing Summary */}
-      <div className="mb-6 rounded-xl border border-border bg-card p-5">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Euro className="h-4 w-4" />
-          <span>D&eacute;tail du prix</span>
-        </div>
-        <div className="mt-3 flex flex-col gap-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-foreground">Mouton entier</span>
-            <span className="font-medium text-foreground">300&euro;</span>
-          </div>
-          <div className="border-t border-dashed border-border" />
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-primary">Acompte &agrave; r&eacute;gler maintenant</span>
-            <span className="text-lg font-bold text-primary">100&euro;</span>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Reste &agrave; payer &agrave; la livraison : 200&euro; (esp&egrave;ces)
-          </p>
         </div>
       </div>
-
-      {/* Continue Button */}
-      <button
-        onClick={onContinue}
-        disabled={!selectedSlot}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-4 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
-      >
-        Continuer
-        <ArrowRight className="h-5 w-5" />
-      </button>
-    </div>
-  )
+    </section>
+  );
 }
